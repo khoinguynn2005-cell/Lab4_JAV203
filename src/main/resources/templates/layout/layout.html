@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!-- Fragment view(title, content): khung chung cho mọi trang quản trị -->
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="view(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <!-- tiêu đề trình duyệt: lấy thẻ <title> của trang con -->
+    <title th:replace="${title}">TITLE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSS chung: file nằm ở static/css/style.css, gắn 1 lần ở layout là cả 3 trang dùng được -->
+    <!-- ?v=2: đổi số này mỗi khi sửa CSS để trình duyệt bỏ bản cũ trong cache và tải bản mới -->
+    <link rel="stylesheet" href="/css/style.css?v=3">
+</head>
+<body>
+    <header><h1 th:text="#{app.name}">Hệ thống quản lý sản phẩm</h1></header>
+    <!-- menu tách ra file riêng menu.html -->
+    <nav th:replace="~{layout/menu}">MENU</nav>
+    <!-- nội dung: lấy thẻ <article> của trang con -->
+    <article th:replace="${content}">CONTENT</article>
+    <footer><span th:text="#{footer.text}">© 2026</span></footer>
+</body>
+</html>

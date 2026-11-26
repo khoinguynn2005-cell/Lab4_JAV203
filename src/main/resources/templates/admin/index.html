@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<!-- Gọi layout: truyền <title> và <article> của trang này vào fragment view(title, content) -->
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout::view(~{::title}, ~{::article})}">
+<head>
+    <title th:text="#{title.home}">Trang chủ quản trị</title>
+</head>
+<body>
+    <article>
+        <h2 th:text="#{home.heading}">Trang chủ quản trị 123</h2>
+        <p th:text="#{home.welcome}">Chào mừng...</p>
+        <p th:text="#{home.guide}">Hướng dẫn...</p>
+    </article>
+</body>
+</html>

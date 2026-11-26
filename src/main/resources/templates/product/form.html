@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!-- Gọi layout: truyền <title> và <article> của trang này vào fragment view(title, content) -->
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout::view(~{::title}, ~{::article})}">
+<head>
+    <title th:text="#{title.product}">Thêm sản phẩm</title>
+</head>
+<body>
+<article>
+    <h2 th:text="#{product.heading}">Thêm sản phẩm</h2>
+    <!-- thông báo tổng quát: Controller đưa KEY vào Model, #{${message}} tra key theo ngôn ngữ -->
+    <!-- th:classappend: lỗi -> khung đỏ, hợp lệ -> khung xanh -->
+    <b th:if="${message}" th:text="#{${message}}" class="msg"
+       th:classappend="${message == 'msg.invalid'} ? 'msg-error' : 'msg-ok'"></b>
+
+    <form th:object="${product}" action="/product/save" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <label for="id" th:text="#{product.id}">Mã sản phẩm</label>
+            <div class="field"><input th:field="*{id}"><i th:errors="*{id}"></i></div>
+        </div>
+
+        <div class="row">
+            <label for="name" th:text="#{product.name}">Tên sản phẩm</label>
+            <div class="field"><input th:field="*{name}"><i th:errors="*{name}"></i></div>
+        </div>
+
+        <div class="row">
+            <label for="price" th:text="#{product.price}">Giá bán</label>
+            <!-- không dùng type="number": với ô number, Thymeleaf bỏ qua @NumberFormat và in ra 2.5E7 -->
+            <div class="field"><input th:field="*{price}"><i th:errors="*{price}"></i></div>
+        </div>
+
+        <div class="row">
+            <label for="quantity" th:text="#{product.quantity}">Số lượng</label>
+            <div class="field"><input th:field="*{quantity}" type="number"><i th:errors="*{quantity}"></i></div>
+        </div>
+
+        <div class="row">
+            <label for="importDate" th:text="#{product.importDate}">Ngày nhập hàng</label>
+            <div class="field"><input th:field="*{importDate}" type="date"><i th:errors="*{importDate}"></i></div>
+        </div>
+
+        <div class="row">
+            <label th:text="#{product.available}">Trạng thái kinh doanh</label>
+            <div class="field">
+                <label class="radio"><input th:field="*{available}" type="radio" value="true">
+                    <span th:text="#{product.status.on}">Đang kinh doanh</span></label>
+                <label class="radio"><input th:field="*{available}" type="radio" value="false">
+                    <span th:text="#{product.status.off}">Ngừng kinh doanh</span></label>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="categoryId" th:text="#{product.category}">Loại sản phẩm</label>
+            <div class="field">
+                <select th:field="*{categoryId}">
+                    <option value="" th:text="#{product.category.choose}">-- Chọn loại --</option>
+                    <option value="DT" th:text="#{category.DT}">Điện thoại</option>
+                    <option value="LT" th:text="#{category.LT}">Laptop</option>
+                    <option value="PK" th:text="#{category.PK}">Phụ kiện</option>
+                </select><i th:errors="*{categoryId}"></i>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="description" th:text="#{product.description}">Mô tả ngắn</label>
+            <div class="field"><textarea th:field="*{description}"></textarea><i th:errors="*{description}"></i></div>
+        </div>
+
+        <div class="row">
+            <label for="managerEmail" th:text="#{product.managerEmail}">Email người phụ trách</label>
+            <div class="field"><input th:field="*{managerEmail}"><i th:errors="*{managerEmail}"></i></div>
+        </div>
+
+        <div class="row">
+            <label for="imageFile" th:text="#{product.image}">Ảnh sản phẩm</label>
+            <div class="field">
+                <!-- accept="image/*": hộp chọn file chỉ hiện file ảnh -->
+                <input id="imageFile" name="imageFile" type="file" accept="image/*">
+                <!-- hiển thị lại ảnh hiện tại: mở form -> product.png, sau khi Save -> ảnh vừa chọn -->
+                <!-- '/uploads/' + tên ảnh: đường dẫn do UploadConfig phục vụ -->
+                <div class="preview">
+                    <img th:src="${'/uploads/' + product.image}" src="/images/product.png" alt="">
+                    <span th:text="${product.image}">product.png</span>
+                </div>
+            </div>
+        </div>
+
+        <button th:text="#{product.save}">Save</button>
+    </form>
+
+    <div class="info" th:if="${saved}">
+        <h3 th:text="#{product.info}">Thông tin sản phẩm</h3>
+        <table>
+            <tr><td th:text="#{product.id}"></td><td th:text="${product.id}"></td></tr>
+            <tr><td th:text="#{product.name}"></td><td th:text="${product.name}"></td></tr>
+            <tr><td th:text="#{product.price}"></td><td th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></td></tr>
+            <tr><td th:text="#{product.quantity}"></td><td th:text="${product.quantity}"></td></tr>
+            <tr><td th:text="#{product.importDate}"></td><td th:text="${#dates.format(product.importDate, 'dd/MM/yyyy')}"></td></tr>
+            <tr><td th:text="#{product.available}"></td><td th:text="${product.available} ? #{product.status.on} : #{product.status.off}"></td></tr>
+            <!-- ghép key: 'category.' + DT = category.DT -> tra ra tên loại theo ngôn ngữ -->
+            <tr><td th:text="#{product.category}"></td><td th:text="#{${'category.' + product.categoryId}}"></td></tr>
+            <tr><td th:text="#{product.description}"></td><td th:text="${product.description}"></td></tr>
+            <tr><td th:text="#{product.managerEmail}"></td><td th:text="${product.managerEmail}"></td></tr>
+            <tr><td th:text="#{product.image}"></td>
+                <td><img th:src="${'/uploads/' + product.image}" class="thumb" alt="">
+                    <span th:text="${product.image}"></span></td></tr>
+        </table>
+    </div>
+</article>
+</body>
+</html>

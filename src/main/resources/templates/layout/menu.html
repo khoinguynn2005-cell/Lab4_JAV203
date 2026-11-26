@@ -1,0 +1,13 @@
+<nav xmlns:th="http://www.thymeleaf.org">
+    <div>
+        <a href="/admin/index" th:text="#{menu.home}">Trang chủ</a>
+        <a href="/product/form" th:text="#{menu.product}">Thêm sản phẩm</a>
+        <a href="/admin/about" th:text="#{menu.about}">Giới thiệu</a>
+    </div>
+    <!-- chọn ngôn ngữ: gửi ?lang=... về chính trang hiện tại -->
+    <!-- ảnh lá cờ nằm ở static/images/, title: chữ hiện khi rê chuột -->
+    <div class="lang">
+        <a href="?lang=vi" title="Tiếng Việt"><img src="/images/flag-vi.svg?v=2" alt="Tiếng Việt" class="flag" width="30" height="20"></a>
+        <a href="?lang=en" title="English"><img src="/images/flag-en.svg?v=2" alt="English" class="flag" width="30" height="20"></a>
+    </div>
+</nav>
